@@ -6,7 +6,10 @@ export const HeaderContainer = styled.header`
   display: flex;
   height: 104px;
   justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1440px;
   padding: 0 10rem;
+  width: 100%;
 `
 
 export const Actions = styled.div`
