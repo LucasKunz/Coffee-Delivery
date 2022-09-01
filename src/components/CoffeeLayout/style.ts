@@ -11,8 +11,20 @@ export const CoffeeLayout = styled.div`
   max-width: 256px;
   padding: 0 20px 20px;
 
+  
+  @media (max-width: 768px) {
+      justify-content: flex-start;
+      padding: 0 8px 20px
+    }
+
   & > div {
     display: flex;
+  }
+
+  .coffee-type {
+    @media (max-width: 768px) {
+      gap: 0 10px;
+    }
   }
 
   img {
@@ -42,6 +54,11 @@ export const TypeCoffee = styled.span`
   margin: 12px 5px 16px;
   padding: 8px;
   text-transform: uppercase;
+
+  
+  @media (max-width: 768px) {
+    margin: 13px 0;
+  }
 `
 
 export const PriceCoffe = styled.div`
@@ -51,6 +68,11 @@ export const PriceCoffe = styled.div`
   justify-content: space-around;
   margin-top: 33px;
   width: 100%;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 15px 0;
+  }
 
   span {
     color: ${props => props.theme["base-text"]};
@@ -64,6 +86,13 @@ export const PriceCoffe = styled.div`
     display: flex;
     font-size: 0.875rem;
     gap: 0 3px;
+
+    
+    @media (max-width: 768px) {
+      display: block;
+      text-align: center;
+      width: 100%;
+    }
   }
 
   .counter {

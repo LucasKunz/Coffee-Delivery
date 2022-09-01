@@ -2,6 +2,8 @@ import { Minus, Plus, ShoppingCartSimple } from "phosphor-react"
 import { CoffeeLayout, PriceCoffe, ShoppingCartIcon, TypeCoffee } from "./style"
 import { useContext, useState } from "react"
 import { CartContext } from "../../contexts/CartContext"
+import { Link } from "react-router-dom"
+import { CounterCoffee } from "../../utils/CounterCoffee"
 
 export type Coffee = {
   id: number
@@ -10,6 +12,7 @@ export type Coffee = {
   flags: string[]
   image: string
   price: number
+  quantity: number
 }
 
 export type CoffeeProps = {
@@ -19,31 +22,25 @@ export type CoffeeProps = {
 
 export function CoffeeInformations({ coffee }: CoffeeProps) {
   const { addedCoffees, setAddedCoffees } = useContext(CartContext)
-  const [counter, setCounter] = useState(0)
 
-  const counterUpdated = addedCoffees.filter(item => item.id === coffee.id).length
+  const quantityUptadet = addedCoffees.filter(addedCoffee => addedCoffee.id === coffee.id)[0]?.quantity
 
-  function handleCounter(type: string, coffee: Coffee) {
-    if (type === 'reduce' && counterUpdated > 0) {
-      const indexCoffee = addedCoffees.findIndex(item => item.id === coffee.id)
+  const handleCounterCoffee = (type: string, coffee: Coffee) => {
+    const counter = CounterCoffee({
+      type,
+      coffee,
+      addedCoffees
+    })
 
-      if (indexCoffee < 0) return
-
-      const newArrayCoffee = addedCoffees
-
-      newArrayCoffee.splice(indexCoffee, 1)
-
-      setAddedCoffees([...newArrayCoffee])
-      setCounter(counter - 1)
-    } else if (type === 'increase') {
-      setCounter(counter + 1)
-      setAddedCoffees([...addedCoffees, coffee])
-    }
+    if (!counter) return
+    
+    setAddedCoffees(counter)
   }
+  
   return (
-    <CoffeeLayout key={coffee.id}>
+    <CoffeeLayout key={coffee.id} className="keen-slider__slide">
       <img src={coffee.image} alt="" />
-      <div>
+      <div className="coffee-type">
         {coffee.flags.map(flag => {
           return <TypeCoffee>{flag}</TypeCoffee>
         })}
@@ -55,13 +52,15 @@ export function CoffeeInformations({ coffee }: CoffeeProps) {
           R$<span>{coffee.price.toFixed(2)}</span>
         </div>
         <div className="counter">
-          <Minus weight="bold" color="#8047F8" size={14} onClick={() => handleCounter('reduce', coffee)} />
-          <span>{counterUpdated}</span>
-          <Plus weight="bold" color="#8047F8" size={14} onClick={() => handleCounter('increase', coffee)} />
+          <Minus weight="bold" color="#8047F8" size={14} onClick={() => handleCounterCoffee('reduce', coffee)} />
+          <span>{quantityUptadet ? quantityUptadet : 0}</span>
+          <Plus weight="bold" color="#8047F8" size={14} onClick={() => handleCounterCoffee('increase', coffee)} />
         </div>
-        <ShoppingCartIcon>
-          <ShoppingCartSimple size={22} color='#fff' weight="fill" />
-        </ShoppingCartIcon>
+        <Link to={'/cart'}>
+          <ShoppingCartIcon>
+            <ShoppingCartSimple size={22} color='#fff' weight="fill" />
+          </ShoppingCartIcon>
+        </Link>
       </PriceCoffe>
     </CoffeeLayout>
   )
