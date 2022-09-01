@@ -1,5 +1,9 @@
 import { AvaiableCoffes } from "./style"
 import { CoffeeInformations } from "../CoffeeLayout"
+import { useKeenSlider } from "keen-slider/react";
+import "keen-slider/keen-slider.min.css";
+
+const IS_MOBILE = window.innerWidth < 768
 
 const avaiableCoffes = [
   {
@@ -8,7 +12,8 @@ const avaiableCoffes = [
     description: 'O tradicional café feito com água quente e grãos moídos',
     flags: ['tradicional'],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/americano.svg',
-    price: 9.90
+    price: 9.90,
+    quantity: 0
   },
   {
     id: 2,
@@ -16,7 +21,8 @@ const avaiableCoffes = [
     description: 'Expresso diluído, menos intenso que o tradicional',
     flags: ['tradicional'],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/expressoAmericano.svg',
-    price: 9.90
+    price: 10.90,
+    quantity: 0
   },
   {
     id: 3,
@@ -24,7 +30,8 @@ const avaiableCoffes = [
     description: 'Café expresso tradicional com espuma cremosa',
     flags: ['tradicional'],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/expressoCremoso.svg',
-    price: 9.90
+    price: 10.50,
+    quantity: 0
   },
   {
     id: 4,
@@ -35,7 +42,8 @@ const avaiableCoffes = [
       'gelado'
     ],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/cafeGelado.svg',
-    price: 9.90
+    price: 10.50,
+    quantity: 0
   },
   {
     id: 5,
@@ -46,7 +54,8 @@ const avaiableCoffes = [
       'com leite'
     ],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/cafeComLeite.svg',
-    price: 9.90
+    price: 9.90,
+    quantity: 0
   },
   {
     id: 6,
@@ -57,7 +66,8 @@ const avaiableCoffes = [
       'com leite'
     ],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/latte.svg',
-    price: 9.90
+    price: 12.00,
+    quantity: 0
   },
   {
     id: 7,
@@ -68,7 +78,8 @@ const avaiableCoffes = [
       'com leite'
     ],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/capuccino.svg',
-    price: 9.90
+    price: 12.00,
+    quantity: 0
   },
   {
     id: 8,
@@ -79,16 +90,30 @@ const avaiableCoffes = [
       'com leite'
     ],
     image: 'http://127.0.0.1:5173/src/assets/avaiableCoffes/macchiato.svg',
-    price: 9.90
+    price: 12.50,
+    quantity: 0
   }
 ]
 
 export function AvaiableCoffees() {
+  const [ref] = useKeenSlider<HTMLDivElement>({
+    slides: {
+      perView: 1.8,
+      spacing: 10,
+    },
+  });
+
   return (
     <AvaiableCoffes>
       <h2>Nossos cafés</h2>
       <div>
-        {avaiableCoffes.map(coffee => <CoffeeInformations key={Math.random()} coffee={coffee} />)}
+        {IS_MOBILE ? (
+          <div ref={ref} className="keen-slider">
+            {avaiableCoffes.map(coffee => <CoffeeInformations key={coffee.id} coffee={coffee} />)}
+          </div>
+        ) : (
+          avaiableCoffes.map(coffee => <CoffeeInformations key={coffee.id} coffee={coffee} />)
+        )}
       </div>
     </AvaiableCoffes>
   )
