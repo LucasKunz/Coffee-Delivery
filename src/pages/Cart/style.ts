@@ -1,15 +1,19 @@
 import styled from "styled-components";
 
-export const CartContainer = styled.main`
+export const CartContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
   max-width: 1120px;
   padding-top: 94px;
   width: 100%;
-`
 
-export const RequestContainer = styled.main`
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 15px 20px;
+  }
+`
+export const RequestContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 12px 0;
@@ -22,88 +26,6 @@ export const RequestContainer = styled.main`
   }
 `
 
-export const FormContainer = styled.div`
-  background-color: ${props => props.theme["base-card"]};
-  border-radius: 6px;
-  max-width: 640px;
-  padding: 40px;
-`
-
-export const AddressDelivery = styled.div`
-  align-items: flex-start;
-  display: flex;
-  gap: 0 8px;
-
-  div {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .title {
-    color: ${props => props.theme["base-subtitle"]};
-  }
-
-  .description {
-    color: ${props => props.theme["base-text"]};
-    font-size: 0.875rem;
-  }
-`
-export const FormLayout = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 16px 0;
-  margin-top: 32px;
-
-  div {
-    display: flex;
-    gap: 0 12px;
-  }
-`
-
-const BaseInputForm = styled.input`
-  background-color: ${props => props.theme["base-input"]};
-  border: 1px solid ${props => props.theme["base-button"]};
-  border-radius: 4px;
-  color: ${props => props.theme["base-label"]};
-  font-size: 0.875rem;
-  padding: 12px;
-`
-
-export const CodeInput = styled(BaseInputForm)`
-  max-width: 200px;
-  width: 100%;
-`
-
-export const StreetInput = styled(BaseInputForm)`
-  max-width: 100%;
-  width: 100%;
-`
-
-export const NumberInput = styled(BaseInputForm)`
-  max-width: 200px;
-  width: 100%;
-`
-
-export const ComplementInput = styled(BaseInputForm)`
-  max-width: 348px;
-  width: 100%;
-`
-
-export const DistrictInput = styled(BaseInputForm)`
-  max-width: 200px;
-  width: 100%;
-`
-
-export const CityInput = styled(BaseInputForm)`
-  max-width: 276px;
-  width: 100%;
-`
-
-export const StateInput = styled(BaseInputForm)`
-  max-width: 60px;
-  width: 100%;
-`
-
 export const PaymentContainer = styled.div`
   background-color: ${props => props.theme["base-card"]};
   border-radius: 6px;
@@ -111,6 +33,10 @@ export const PaymentContainer = styled.div`
   flex-direction: column;
   max-width: 640px;
   padding: 40px;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 `
 export const PaymentInfo = styled.div`
   display: flex;
@@ -135,9 +61,19 @@ export const PaymentOptions = styled.div`
   display: flex;
   gap: 0 12px;
   margin-top: 32px;
+
+  input[type='radio'] {
+    opacity: 0;
+    width: 0;
+  }
+
+  @media (max-width: 768px) {
+    align-items: center;
+    flex-direction: column;
+  }
 `
 
-export const ButtonPayment = styled.button`
+export const ButtonPayment = styled.label`
   align-items: center;
   background-color: ${props => props.theme["base-button"]};
   border: 1px solid transparent;
@@ -152,151 +88,76 @@ export const ButtonPayment = styled.button`
   text-transform: uppercase;
   width: 100%;
 
-  &:active {
+  &.active-payment {
     border: 1px solid ${props => props.theme["purple"]};
   }
-`
 
-
-export const CheckoutContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 15px 0;
-  max-width: 448px;
-  width: 100%;
-
-  .checkout-title {
-    color: ${props => props.theme["base-subtitle"]};
-    font-family: 'Baloo 2';
-    font-size: 1.125rem;
+  @media (max-width: 768px) {
+    max-width: 350px;
   }
 `
 
-export const CheckoutLayout = styled.div`
-  background-color: ${props => props.theme["base-card"]};
-  border-radius: 6px 44px;
+
+
+export const OrderConfirmed = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  .order-confirmed {
+    &__title {
+      color: ${props => props.theme["yellow-dark"]};
+      font-family: 'Baloo 2';
+      font-size: 2rem;
+    }
+
+    &__description {
+      color: ${props => props.theme["base-title"]};
+      font-size: 1.25rem;
+      margin: 4px 0 40px
+    }
+  }
+`
+
+export const OrderInformations = styled.div`
+  background: 
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(to right, #DBAC2C, #8047F8) border-box;
+  border-radius: 6px 36px;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 32px 0;
   padding: 40px;
+  width: 526px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+    padding: 20px;
+    width: 100%;
+  }
 `
 
-export const AddedCoffees = styled.div`
-  max-height: 380px;
-  overflow: auto;
-`
-
-export const CoffeeCart = styled.div`
-  border-bottom: 1px solid ${props => props.theme["base-button"]};
+export const InformationItem = styled.div `
   display: flex;
-  justify-content: space-between;
-
-  & > div {
-    display: flex;
-    gap: 0 20px;
-    padding-bottom: 32px;
-
-    p {
-      display: block;
-    }
-  }
-
-  & + div {
-    margin-top: 32px;
-  }
-
-  img {
-    max-width: 64px;
-  }
-
-  span {
-    color: ${props => props.theme["base-text"]};
-    display: flex;
-    font-weight: 700;
-    gap: 0 5px;
-  }
 `
 
-export const CoffeeInfo = styled.div`
+const baseIcons = styled.div`
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-
-  & > div {
-    align-items: center;
-    display: flex;
-    gap: 0 8px;
-    margin-top: 8px;
-  }
-
-  p {
-    color: ${props => props.theme["base-subtitle"]}
-  }
-
-  .counter {
-    align-items: center;
-    background-color: ${props => props.theme["base-button"]};
-    border-radius: 6px;
-    display: flex;
-    justify-content: space-between;
-    height: 32px;
-    padding: 8px;
-    width: 72px;
-
-    span {
-      font-family: 'Roboto';
-      font-size: 1rem;
-    }
-  }
-
-  button {
-    align-items: center;
-    background-color: ${props => props.theme["base-button"]};
-    border: 0;
-    border-radius: 6px;
-    color: ${props => props.theme["base-text"]};
-    display: flex;
-    font-size: 0.75rem;
-    gap: 0 4px;
-    height: 32px;
-    justify-content: space-between;
-    text-transform: uppercase;
-    padding: 0 8px;
-  }
+  height: 32px;
+  margin-right: 12px;
+  padding: 8px;
+  width: 32px;
 `
 
-export const OrderInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px 0;
-  margin-top: 32px;
-
-  div {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .order-description {
-    color: ${props => props.theme["base-text"]};
-    font-size: .875rem;
-  }
-
-  .order-price {
-    color: ${props => props.theme["base-text"]};
-  }
-
-  .order-total {
-    color: ${props => props.theme["base-subtitle"]};
-    font-weight: 700;
-    font-size: 1.25rem;
-  }
-
-  button {
-    background-color: ${props => props.theme["yellow"]};
-    border: 0;
-    border-radius: 6px;
-    color: ${props => props.theme["white"]};
-    font-size: .875rem;
-    font-weight: 700;
-    height: 46px;
-    padding: 12px 8px;
-    margin-top: 24px;
-    text-transform: uppercase;
-  }
+export const LocationIcon = styled(baseIcons)`
+  background-color: ${props => props.theme.purple};
 `
+
+export const TimerIcon = styled(baseIcons)`
+  background-color: ${props => props.theme.yellow};
+`
+export const MoneyIcon = styled(baseIcons)`
+  background-color: ${props => props.theme["yellow-dark"]};
+`
+

@@ -1,130 +1,172 @@
-import { Bank, CreditCard, CurrencyDollar, MapPinLine, Minus, Money, Plus, Trash } from "phosphor-react"
-import { useContext } from "react"
+import { CreditCard, CurrencyDollar, MapPin, Money, Timer } from "phosphor-react"
+import { useContext, useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import { Form } from "../../components/Form"
 import { CartContext } from "../../contexts/CartContext"
+import orderRealizedImg from '../../assets/order-realized.svg'
 import {
   CartContainer,
-  CheckoutLayout,
-  FormContainer,
   RequestContainer,
-  AddressDelivery,
-  FormLayout,
-  CodeInput,
-  StreetInput,
-  NumberInput,
-  ComplementInput,
-  DistrictInput,
-  CityInput,
-  StateInput,
-  CheckoutContainer,
   PaymentContainer,
   PaymentInfo,
   ButtonPayment,
   PaymentOptions,
-  CoffeeCart,
-  AddedCoffees,
-  OrderInfo,
-  CoffeeInfo
+  OrderInformations,
+  LocationIcon,
+  TimerIcon,
+  MoneyIcon,
+  InformationItem,
+  OrderConfirmed,
+
 } from "./style"
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
+import { CheckoutSideBar } from "../../components/CheckoutSideBar"
+
+
+const newOrderFormValidationSchema = zod.object({
+  cep: zod.string().min(1, 'Informe seu CEP.').max(8, 'O CEP deve ser menor que 8 dígitos'),
+  street: zod.string().min(3, 'Informe o nome de sua rua.'),
+  number: zod.string().min(3, 'Informe o número de seu endereço.'),
+  district: zod.string().min(3, 'Informe o seu bairro.'),
+  complement: zod.string(),
+  city: zod.string().min(3, 'Informe o sua cidade.'),
+  state: zod.string().min(2, 'Informe o seu estado.'),
+  payment: zod.string().min(5, 'Escolha a forma de pagamento.').default('as')
+})
+
+type NewOrderFormData = Zod.infer<typeof newOrderFormValidationSchema>
 
 export function Cart() {
   const { addedCoffees } = useContext(CartContext)
-  console.log('AddedCoffees', addedCoffees)
+  const [addressOrder, setAddressOrder] = useState({
+    cep: '',
+    street: '',
+    district: '',
+    number: '',
+    state: '',
+    city: '',
+    complement: '',
+    payment: ''
+  })
+  const [messageError, setMessageError] = useState('')
+  const [formSent, setFormSent] = useState(false)
+  const { setAddedCoffees } = useContext(CartContext)
+  const newOrderForm = useForm<NewOrderFormData>({
+    resolver: zodResolver(newOrderFormValidationSchema),
+    defaultValues: {
+      cep: '',
+      street: '',
+      district: '',
+      number: '',
+      state: '',
+      city: '',
+      complement: '',
+      payment: ''
+    }
+  })
+
+  const { register, handleSubmit } = newOrderForm
+
+  function handleActiveButtonPayment(event: any) {
+    const buttonsPaymentWithActiveClass = document.querySelectorAll('.active-payment')
+
+    if (buttonsPaymentWithActiveClass) {
+      buttonsPaymentWithActiveClass.forEach(button =>
+        button.classList.remove('active-payment')
+      )
+    }
+
+    event.target.classList.toggle('active-payment')
+  }
+
+  function onSubmit(data: any) {
+    event?.preventDefault()
+    setAddressOrder(data)
+    setFormSent(true)
+    setAddedCoffees([])
+  }
+
   return (
     <CartContainer>
-      <RequestContainer>
-        <p className="form-title">Complete seu pedido</p >
-        <FormContainer>
-          <AddressDelivery>
-            <MapPinLine size={22} color='#C47F17' weight="regular" />
-            <div>
-              <span className="title">Endereço de Entrega</span>
-              <span className="description">Informe o endereço onde deseja receber seu pedido</span>
-            </div>
-          </AddressDelivery>
-          <FormLayout action="">
-            <CodeInput type="text" placeholder="CEP" />
-            <StreetInput type="text" placeholder="Rua" />
-            <div>
-              <NumberInput type="text" placeholder="Número" />
-              <ComplementInput type="text" placeholder="Complemento" />
-            </div>
-            <div>
-              <DistrictInput type="text" placeholder="Bairro" />
-              <CityInput type="text" placeholder="Cidade" />
-              <StateInput maxLength={2} type="text" placeholder="UF" />
-            </div>
-          </FormLayout>
-        </FormContainer>
-        <PaymentContainer>
-          <PaymentInfo>
-            <CurrencyDollar size={22} color="#8047F8" />
-            <div>
-              <span className="payment-title">Pagamento</span>
-              <span className="payment-description">O pagamento é feito na entrega. Escolha a forma que deseja pagar</span>
-            </div>
-          </PaymentInfo>
-          <PaymentOptions>
-            <ButtonPayment>
-              <CreditCard size={17} color="#8047F8" />
-              Cartão de crédito
-            </ButtonPayment>
-            <ButtonPayment>
-              <Bank size={17} color="#8047F8" />
-              Cartão de débito
-            </ButtonPayment>
-            <ButtonPayment>
-              <Money size={17} color="#8047F8" />
-              Dinheiro
-            </ButtonPayment>
-          </PaymentOptions>
-        </PaymentContainer>
-      </RequestContainer>
-      <CheckoutContainer>
-        <p className="checkout-title">Cafés selecionados</p>
-        <CheckoutLayout>
-          <AddedCoffees>
-            {addedCoffees.map(coffee => {
-              return (
-                <CoffeeCart key={coffee.id}>
+      {
+        formSent ? (
+          <>
+            <OrderConfirmed>
+              <p className="order-confirmed__title">Uhu! Pedido  confirmado</p>
+              <p className="order-confirmed__description">Agora é só aguardar que logo o café chegará até você</p>
+              <OrderInformations>
+                <InformationItem>
+                  <LocationIcon>
+                    <MapPin weight="fill" color="white" />
+                  </LocationIcon>
                   <div>
-                    <img src={coffee.image} alt={coffee.name} />
-                    <CoffeeInfo>
-                      <p>{coffee.name}</p>
-                      <div>
-                        <div className="counter">
-                          <Minus weight="bold" color="#8047F8" size={14} />
-                          <span>1</span>
-                          <Plus weight="bold" color="#8047F8" size={14} />
-                        </div>
-                        <button>
-                          <Trash size={17} color="#8047F8" />
-                          Remover
-                        </button>
-                      </div>
-                    </CoffeeInfo>
+                    <p>Entrega em</p>
+                    <p>{addressOrder.street}, {addressOrder.number} - {addressOrder.city}, {addressOrder.state}</p>
                   </div>
-                  <span>R$<span>{coffee.price.toFixed(2)}</span></span>
-                </CoffeeCart>
-              )
-            })}
-          </AddedCoffees>
-          <OrderInfo>
-            <div>
-              <span className="order-description">Total de itens</span>
-              <span className="order-price">R$ 29,70</span>
-            </div>
-            <div>
-              <span className="order-description">Entrega</span>
-              <span className="order-price">R$ 3,70</span>
-            </div>
-            <div>
-              <span className="order-total">Total</span>
-              <span className="order-total">R$ 29,70</span>
-            </div>
-            <button>Confirmar Pedido</button>
-          </OrderInfo>
-        </CheckoutLayout>
-      </CheckoutContainer>
+                </InformationItem>
+                <InformationItem>
+                  <TimerIcon>
+                    <Timer weight="fill" color="white" />
+                  </TimerIcon>
+                  <div>
+                    <p>Previsão de entrega</p>
+                    <p>20 min - 30 min</p>
+                  </div>
+                </InformationItem>
+                <InformationItem>
+                  <MoneyIcon>
+                    <CurrencyDollar weight="fill" color="white" />
+                  </MoneyIcon>
+                  <div>
+                    <p>Pagamento na entrega</p>
+                    <p>{addressOrder.payment}</p>
+                  </div>
+                </InformationItem>
+              </OrderInformations>
+            </OrderConfirmed>
+            <img src={orderRealizedImg} alt="" />
+          </>
+        ) : (
+          <>
+            <RequestContainer id='form-address' onSubmit={handleSubmit(onSubmit)}>
+              <p className="form-title">Complete seu pedido</p >
+              <FormProvider {...newOrderForm}>
+                <Form handleMessageError={setMessageError} />
+              </FormProvider>
+              <PaymentContainer>
+                <PaymentInfo>
+                  <CurrencyDollar size={22} color="#8047F8" />
+                  <div>
+                    <span className="payment-title">Pagamento</span>
+                    <span className="payment-description">O pagamento é feito na entrega. Escolha a forma que deseja pagar</span>
+                  </div>
+                </PaymentInfo>
+                <PaymentOptions>
+                  <input type="radio" id="credit-card" value="Cartão de crédito" {...register('payment')} />
+                  <ButtonPayment onClick={handleActiveButtonPayment} htmlFor="credit-card">
+                    <CreditCard size={17} color="#8047F8" />
+                    Cartão de crédito
+                  </ButtonPayment>
+
+                  <input type="radio" id="debit-card" value="Cartão de Crédito" {...register('payment')} />
+                  <ButtonPayment onClick={handleActiveButtonPayment} htmlFor="debit-card">
+                    <CreditCard size={17} color="#8047F8" />
+                    Cartão de débito
+                  </ButtonPayment>
+                  <input type="radio" id="money" value="Dinheiro" {...register('payment')} />
+                  <ButtonPayment onClick={handleActiveButtonPayment} htmlFor="money">
+                    <Money size={17} color="#8047F8" />
+                    Dinheiro
+                  </ButtonPayment>
+                </PaymentOptions>
+              </PaymentContainer>
+            </RequestContainer>
+            <CheckoutSideBar messageError={messageError} />
+          </>
+        )
+      }
     </CartContainer>
   )
 }
