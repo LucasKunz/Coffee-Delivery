@@ -7,6 +7,9 @@ import { Actions, CartIcon, HeaderContainer, LocationIcon } from './style'
 
 export function Header() {
   const { addedCoffees } = useContext(CartContext)
+
+  const sumWithInitial = addedCoffees.length > 0 ? addedCoffees.reduce(function (acc, obj) { return acc + obj.quantity }, 0) : 0
+
   return (
     <HeaderContainer>
       <Link to={'/'}>
@@ -20,7 +23,7 @@ export function Header() {
         <Link to={'/cart'}>
           <CartIcon>
             <ShoppingCart color={'#C47F17'} size={22} weight="fill" />
-            {addedCoffees.length > 0 ? <span>{addedCoffees.length}</span> : ''}
+            {sumWithInitial > 0 ? <span>{sumWithInitial}</span> : ''}
           </CartIcon>
         </Link>
       </Actions>

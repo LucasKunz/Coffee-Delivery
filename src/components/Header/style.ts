@@ -10,6 +10,10 @@ export const HeaderContainer = styled.header`
   max-width: 1440px;
   padding: 0 10rem;
   width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `
 
 export const Actions = styled.div`

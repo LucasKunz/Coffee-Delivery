@@ -20,13 +20,18 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
 
     return []
   })
-  
-  
+
   useEffect(() => {
-    const stateJSON = JSON.stringify(addedCoffees)
-    console.log('CoffeesAdded:', addedCoffees)
-    localStorage.setItem('@ignite-timer:cartCoffees-1.0.0', stateJSON)
+    const addedCoffeesWithQuantity = addedCoffees.filter(coffee => coffee.quantity > 0)
+
+    if (addedCoffeesWithQuantity) {
+      const stateJSON = JSON.stringify(addedCoffeesWithQuantity)
+      localStorage.setItem('@ignite-timer:cartCoffees-1.0.0', stateJSON)
+    } else {
+      localStorage.clear()
+    }
   }, [addedCoffees])
+  
   return (
     <CartContext.Provider
       value={{
